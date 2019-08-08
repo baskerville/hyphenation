@@ -63,7 +63,7 @@ pub trait Hyphenator<'h> {
         match self.boundaries(lowercase_word) {
             None => vec![],
             Some(mins) => {
-                match self.exact(lowercase_word) {
+                match self.exact_within(lowercase_word, mins) {
                     None => self.opportunities_within(lowercase_word, mins),
                     Some(known) => known
                 }
@@ -77,8 +77,9 @@ pub trait Hyphenator<'h> {
     fn opportunities_within(&'h self, lowercase_word : &str, bounds : (usize, usize))
         -> Vec<Self::Opportunity>;
 
-    /// Retrieve the known exact hyphenation for this word, if any.
-    fn exact(&'h self, lowercase_word : &str) -> Option<Vec<Self::Opportunity>>;
+    /// Retrieve the known exact hyphenation for this word, if any, between the specified indices.
+    fn exact_within(&'h self, lowercase_word : &str, bounds : (usize, usize))
+        -> Option<Vec<Self::Opportunity>>;
 
     /// Specify the hyphenation of the given word with an exact sequence of
     /// opportunities. Subsequent calls to `hyphenate` or `opportunities` will
@@ -148,8 +149,8 @@ impl<'h> Hyphenator<'h> for Standard {
     }
 
     #[inline]
-    fn exact(&'h self, w : &str) -> Option<Vec<Self::Opportunity>> {
-        self.exceptions.0.get(w).cloned()
+    fn exact_within(&'h self, w : &str, (l, r) : (usize, usize)) -> Option<Vec<Self::Opportunity>> {
+        self.exceptions.0.get(w).map(|v| v.iter().filter(|&i| *i >= l && *i <= r).cloned().collect())
     }
 
     #[inline]
@@ -193,8 +194,9 @@ impl<'h> Hyphenator<'h> for Extended {
     }
 
     #[inline]
-    fn exact(&'h self, w : &str) -> Option<Vec<Self::Opportunity>> {
-        self.exceptions.0.get(w).map(|v| v.iter().map(|&(i, ref sub)| (i, sub.as_ref())).collect())
+    fn exact_within(&'h self, w : &str, (l, r) : (usize, usize)) -> Option<Vec<Self::Opportunity>> {
+        self.exceptions.0.get(w).map(|v| v.iter()
+            .filter_map(|&(i, ref sub)| if i >= l && i <= r { Some((i, sub.as_ref())) } else { None }).collect())
     }
 
     #[inline]
