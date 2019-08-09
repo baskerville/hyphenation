@@ -8,6 +8,7 @@ homepage = "https://github.com/baskerville/kl-hyphenate"
 documentation = "https://docs.rs/kl-hyphenate"
 description = "Knuth-Liang hyphenation for a variety of languages"
 keywords = ["text", "typesetting"]
+exclude = ["patterns"]
 readme = "README.md"
 build = "build.rs"
 
