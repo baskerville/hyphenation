@@ -16,6 +16,8 @@ The resulting dictionaries are saved in the `dictionaries` directory.
 
 You can then load and use a dictionary with:
 ```rust
+use kl_hyphenate::{Standard, Hyphenator, Language, Load};
+
 let path_to_dict = "dictionaries/en-us.standard.bincode";
 let en_us = Standard::from_path(Language::EnglishUS, path_to_dict) ?;
 
@@ -24,16 +26,16 @@ let hyphenated = en_us.hyphenate("hyphenation");
 
 // Word breaks are represented as byte indices into the string.
 let break_indices = &hyphenated.breaks;
-assert_eq!(break_indices, &[2, 6]);
+assert_eq!(break_indices, &[2, 6, 7]);
 
 // The segments of a hyphenated word can be iterated over.
-let segments = hyphenated.into_iter();
-let collected : Vec<String> = segments.collect();
-assert_eq!(collected, vec!["hy", "phen", "ation"]);
+let segments = hyphenated.into_iter().segments();
+let collected : Vec<_> = segments.collect();
+assert_eq!(collected, vec!["hy", "phen", "a", "tion"]);
 
-/// `hyphenate()` is case-insensitive.
+// `hyphenate()` is case-insensitive.
 let uppercase : Vec<_> = en_us.hyphenate("CAPITAL").into_iter().collect();
-assert_eq!(uppercase, vec!["CAP", "I", "TAL"]);
+assert_eq!(uppercase, vec!["CAP-", "I-", "TAL"]);
 ```
 
 ### Segmentation
