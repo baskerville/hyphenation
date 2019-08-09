@@ -1,4 +1,9 @@
-# `hyphenation`
+## 0.7.2
+
+- Honor the boundaries for the known hyphenations.
+- Simplify the build script and prevent eternal recompilation.
+- Remove the `embed_all` feature.
+- Fix the example given in the README.
 
 ## 0.7.1
 
