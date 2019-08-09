@@ -7,9 +7,9 @@ dictionary type, and the [`Language`] enum. This exposes the crate's core
 functionality, as well as the set of available languages.
 
 ```ignore
-extern crate hyphenation;
+extern crate kl_hyphenate;
 
-use hyphenation::{Hyphenator, Standard, Language};
+use kl_hyphenate::{Hyphenator, Standard, Language};
 ```
 
 To begin with, we must initiate the hyphenation dictionary for our working
@@ -18,7 +18,7 @@ must still be loaded into memory. The most convenient way to do so is the
 [`Load`] trait.
 
 ```ignore
-use hyphenation::Load;
+use kl_hyphenate::Load;
 
 let path_to_dict = "/path/to/english-dictionary.bincode";
 let en_us = Standard::from_path(Language::EnglishUS, path_to_dict) ?;
@@ -91,7 +91,6 @@ extern crate bincode;
 extern crate hyphenation_commons;
 
 
-#[cfg(feature = "embed_all")] mod resources;
 mod case_folding;
 pub mod hyphenator;
 pub mod extended;

@@ -7,11 +7,11 @@ use std::io::{BufReader};
 use std::path::{Path};
 use quickcheck::{quickcheck, TestResult};
 
-extern crate hyphenation;
+extern crate kl_hyphenate;
 extern crate hyphenation_commons;
-use hyphenation::*;
-use hyphenation::extended::*;
-use hyphenation::Language::*;
+use kl_hyphenate::*;
+use kl_hyphenate::extended::*;
+use kl_hyphenate::Language::*;
 
 
 fn fiat_std(lang : Language) -> Standard {

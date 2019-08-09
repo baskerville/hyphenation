@@ -1,25 +1,17 @@
 [package]
-name = "hyphenation"
+name = "kl-hyphenate"
 version = "0.7.1"
-
-authors = ["Andrew <andrew@banausia.com>"]
+authors = ["Bastien Dejean <nihilhill@gmail.com>", "Andrew <andrew@banausia.com>"]
 license = "Apache-2.0/MIT"
-repository = "https://github.com/tapeinosyne/hyphenation"
-homepage = "https://github.com/tapeinosyne/hyphenation"
-documentation = "https://docs.rs/hyphenation"
-
-readme = "README.md"
+repository = "https://github.com/baskerville/kl-hyphenate"
+homepage = "https://github.com/baskerville/kl-hyphenate"
+documentation = "https://docs.rs/kl-hyphenate"
 description = "Knuth-Liang hyphenation for a variety of languages"
 keywords = ["text", "typesetting"]
-
-
-include = ["**/*.rs", "**/Cargo.toml", "dictionaries/*", "patterns/*",
-           "README.md", "LICENSE*"]
+readme = "README.md"
 build = "build.rs"
 
-
 [features]
-embed_all = ["pocket-resources"]
 build_dictionaries = []
 
 # Unicode normalization.
@@ -33,22 +25,17 @@ nfd = ["unicode-normalization"]
 nfkc = ["unicode-normalization"]
 nfkd = ["unicode-normalization"]
 
-
-[workspace]
-members = ["hyphenation_commons"]
-
 [dependencies]
-hyphenation_commons = { path = "hyphenation_commons", version = "0.7.1" }
+hyphenation_commons = "0.7.1"
 atlatl = { version = "0.1.2", features = ["serde"] }
 bincode = "1.0"
 serde = "1.0"
 
 [build-dependencies]
-hyphenation_commons = { path = "hyphenation_commons", version = "0.7.1" }
+hyphenation_commons = "0.7.1"
 atlatl = { version = "0.1.2", features = ["serde"] }
 bincode = "1.0"
 serde = "1.0"
-pocket-resources = { version  = "0.3", optional = true }
 unicode-normalization = { version  = "0.1", optional = true }
 
 [dev-dependencies]

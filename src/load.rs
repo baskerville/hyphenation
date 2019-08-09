@@ -6,8 +6,8 @@ convenience methods for common retrieval patterns, courtesy of the
 [`Load`] trait.
 
 ```
-use hyphenation::Load;
-use hyphenation::{Standard, Language};
+use kl_hyphenate::Load;
+use kl_hyphenate::{Standard, Language};
 ```
 
 The primary function of [`Load`] is to deserialize dictionaries from
@@ -48,7 +48,7 @@ artifact by enabling the `embed_all` feature. Embedded dictionaries can be
 accessed directly from memory.
 
 ```ignore
-use hyphenation::{Standard, Language, Load};
+use kl_hyphenate::{Standard, Language, Load};
 
 let english_us = Standard::from_embedded(Language::EnglishUS) ?;
 ```
@@ -60,7 +60,6 @@ Note that embeding significantly increases the size of the compiled artifact.
 [`from_path`]: trait.Load.html#method.from_path
 */
 
-#[cfg(feature = "embed_all")] use resources::ResourceId;
 use bincode as bin;
 use std::error;
 use std::fmt;
@@ -91,11 +90,6 @@ pub trait Load : Sized {
     /// Deserialize a dictionary from the provided reader.
     fn any_from_reader<R>(reader : &mut R) -> Result<Self>
     where R : io::Read;
-
-    #[cfg(feature = "embed_all")]
-    /// Deserialize the embedded dictionary.
-    fn from_embedded(lang : Language) -> Result<Self>;
-
 }
 
 macro_rules! impl_load {
@@ -115,30 +109,12 @@ macro_rules! impl_load {
                 let dict : Self = bin::config().limit(5_000_000).deserialize_from(reader) ?;
                 Ok(dict)
             }
-
-            #[cfg(feature = "embed_all")]
-            fn from_embedded(lang : Language) -> Result<Self> {
-                let dict_bytes = retrieve_resource(lang.code(), $suffix) ?;
-                let dict = bin::deserialize(dict_bytes) ?;
-                Ok(dict)
-            }
         }
     }
 }
 
 impl_load! { Standard, "standard" }
 impl_load! { Extended, "extended" }
-
-
-#[cfg(feature = "embed_all")]
-fn retrieve_resource<'a>(code : &str, suffix : &str) -> Result<&'a [u8]> {
-    let name = format!("{}.{}.bincode", code, suffix);
-    let res : Option<ResourceId> = ResourceId::from_name(&name);
-    match res {
-        Some(data) => Ok(data.load()),
-        None => Err(Error::Resource)
-    }
-}
 
 
 pub type Result<T> = result::Result<T, Error>;

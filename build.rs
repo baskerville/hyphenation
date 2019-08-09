@@ -2,7 +2,6 @@
 
 #[cfg(any(feature = "nfc", feature = "nfd", feature = "nfkc", feature = "nfkd"))]
 extern crate unicode_normalization;
-#[cfg(feature = "embed_all")] extern crate pocket_resources;
 
 extern crate atlatl;
 extern crate bincode;
@@ -17,7 +16,7 @@ use std::hash::Hash;
 use std::env;
 use std::error;
 use std::fmt;
-use std::fs::{self, File};
+use std::fs::File;
 use std::io;
 use std::io::prelude::*;
 use std::iter::FromIterator;
@@ -26,7 +25,6 @@ use std::path::{Path, PathBuf};
 use hyphenation_commons::dictionary::*;
 use hyphenation_commons::dictionary::extended as ext;
 use hyphenation_commons::Language;
-use hyphenation_commons::Language::*;
 use hyphenation_commons::parse::*;
 
 
@@ -135,12 +133,12 @@ struct Paths {
 impl Paths {
     fn new() -> Result<Self, Error> {
         let source = env::var("CARGO_MANIFEST_DIR").map(|p| PathBuf::from(p)) ?;
-        let out = env::var("OUT_DIR").map(|p| PathBuf::from(p)) ?;
+        let out = source.clone();
 
         Ok(Paths { source, out })
     }
 
-    fn destine_item<P : AsRef<Path>>(&self, p : P) -> PathBuf { self.out.join(p.as_ref()) }
+    fn dest_item<P : AsRef<Path>>(&self, p : P) -> PathBuf { self.out.join(p.as_ref()) }
     fn source_item<P : AsRef<Path>>(&self, p : P) -> PathBuf { self.source.join(p.as_ref()) }
 
     fn source_pattern(&self, lang : Language, suffix : &str) -> PathBuf {
@@ -148,8 +146,8 @@ impl Paths {
         self.source_item("patterns").join(fname)
     }
 
-    fn destine_dict(&self, lang : Language, suffix : &str) -> PathBuf {
-        self.destine_item("dictionaries").join(Self::dict_name(lang, suffix))
+    fn dest_dict(&self, lang : Language, suffix : &str) -> PathBuf {
+        self.dest_item("dictionaries").join(Self::dict_name(lang, suffix))
     }
 
     fn dict_name(lang : Language, suffix : &str) -> String {
@@ -185,67 +183,38 @@ fn write<T>(item : &T, path : &Path) -> Result<(), Error> where T : ser::Seriali
     Ok(())
 }
 
-fn copy_dir(from : &Path, to : &Path) -> Result<(), Error> {
-    for entry in fs::read_dir(from) ? {
-        entry.and_then(|e| fs::copy(e.path(), to.join(e.file_name()))) ?;
-    }
-
-    Ok(())
-}
-
-
-// In which we cope with Cargo's criteria for rebuilding
-
-fn lib_rebuildables() -> Vec<PathBuf> {
-    vec![ Path::new("hyphenation_commons").join("src").join("dictionary.rs")
-        , Path::new("src").join("load.rs") ]
-}
-
-fn demand_rebuild<P>(path : P) where P : AsRef<Path> {
-    println!("cargo:rerun-if-changed={}", path.as_ref().display());
-}
-
 
 fn main() {
-    let dict_folder = Path::new("dictionaries");
-    let _std_out = "standard";
-    let _ext_out = "extended";
-    let paths = Paths::new().unwrap();
-    let dict_source = paths.source_item(dict_folder);
-    let dict_out = paths.destine_item(dict_folder);
-
-    let ext_langs = vec![Catalan, Hungarian];
-    let std_langs =
-        vec![ Afrikaans, Armenian, Assamese, Basque, Belarusian, Bengali, Bulgarian, Catalan,
-              Chinese, Coptic, Croatian, Czech, Danish, Dutch, EnglishGB, EnglishUS, Esperanto,
-              Estonian, Ethiopic, Finnish, French, Friulan, Galician, Georgian, German1901,
-              German1996, GermanSwiss, GreekAncient, GreekMono, GreekPoly, Gujarati, Hindi,
-              Hungarian, Icelandic, Indonesian, Interlingua, Irish, Italian, Kannada, Kurmanji,
-              Latin, LatinClassic, LatinLiturgical, Latvian, Lithuanian, Malayalam, Marathi,
-              Mongolian, NorwegianBokmal, NorwegianNynorsk, Occitan, Oriya, Pali, Panjabi,
-              Piedmontese, Polish, Portuguese, Romanian, Romansh, Russian, Sanskrit,
-              SerbianCyrillic, SerbocroatianCyrillic, SerbocroatianLatin, SlavonicChurch, Slovak,
-              Slovenian, Spanish, Swedish, Tamil, Telugu, Thai, Turkish, Turkmen, Ukrainian,
-              Uppersorbian, Welsh ];
-
-    fs::create_dir_all(&dict_out).unwrap();
-
-    // If no dictionary is to be rebuilt, copy the bundled ones into the `target`
-    // folder.
-    #[cfg(not(any(feature = "build_dictionaries", feature = "nfc", feature = "nfd",
-                  feature = "nfkc", feature = "nfkd")))]
-    {
-        copy_dir(dict_source.as_path(), dict_out.as_path()).unwrap();
-    }
-
-    // Otherwise, process the bundled patterns into new dictionaries and similarly
-    // bundle them.
     #[cfg(any(feature = "build_dictionaries", feature = "nfc", feature = "nfd",
               feature = "nfkc", feature = "nfkd"))]
     {
-        println!("Building `Standard` dictionaries:");
+        use std::fs;
+        use hyphenation_commons::Language::*;
+        let _std_out = "standard";
+        let _ext_out = "extended";
+        let dict_folder = Path::new("dictionaries");
+        let paths = Paths::new().unwrap();
+        let dict_out = paths.dest_item(dict_folder);
+
+        let ext_langs = vec![Catalan, Hungarian];
+        let std_langs =
+            vec![ Afrikaans, Armenian, Assamese, Basque, Belarusian, Bengali, Bulgarian, Catalan,
+                  Chinese, Coptic, Croatian, Czech, Danish, Dutch, EnglishGB, EnglishUS, Esperanto,
+                  Estonian, Ethiopic, Finnish, French, Friulan, Galician, Georgian, German1901,
+                  German1996, GermanSwiss, GreekAncient, GreekMono, GreekPoly, Gujarati, Hindi,
+                  Hungarian, Icelandic, Indonesian, Interlingua, Irish, Italian, Kannada, Kurmanji,
+                  Latin, LatinClassic, LatinLiturgical, Latvian, Lithuanian, Malayalam, Marathi,
+                  Mongolian, NorwegianBokmal, NorwegianNynorsk, Occitan, Oriya, Pali, Panjabi,
+                  Piedmontese, Polish, Portuguese, Romanian, Romansh, Russian, Sanskrit,
+                  SerbianCyrillic, SerbocroatianCyrillic, SerbocroatianLatin, SlavonicChurch, Slovak,
+                  Slovenian, Spanish, Swedish, Tamil, Telugu, Thai, Turkish, Turkmen, Ukrainian,
+                  Uppersorbian, Welsh ];
+
+        fs::create_dir_all(&dict_out).unwrap();
+
+        eprintln!("Building `Standard` dictionaries:");
         for &language in std_langs.iter() {
-            println!("  - {:?}", language);
+            eprintln!("{:?}", language);
             let dict = Standard {
                 language,
                 patterns : Patterns::build(language, &paths).unwrap(),
@@ -253,12 +222,12 @@ fn main() {
                 minima : language.minima()
             };
 
-            write(&dict, &paths.destine_dict(language, _std_out)).unwrap();
+            write(&dict, &paths.dest_dict(language, _std_out)).unwrap();
         }
 
-        println!("Building `Extended` dictionaries:");
+        eprintln!("Building `Extended` dictionaries:");
         for &language in ext_langs.iter() {
-            println!("  - {:?}", language);
+            eprintln!("{:?}", language);
             let dict = Extended {
                 language,
                 patterns : ext::Patterns::build(language, &paths).unwrap(),
@@ -266,30 +235,8 @@ fn main() {
                 minima : language.minima()
             };
 
-            write(&dict, &paths.destine_dict(language, _ext_out)).unwrap();
+            write(&dict, &paths.dest_dict(language, _ext_out)).unwrap();
         }
-    }
-
-    #[cfg(feature = "embed_all")] {
-        // HEED: `pocket_resources` requires paths to be relative
-        let std_p = std_langs.iter().map(|&l| (&dict_folder, Paths::dict_name(l, _std_out)));
-        let ext_p = ext_langs.iter().map(|&l| (&dict_folder, Paths::dict_name(l, _ext_out)));
-        let all_paths : Vec<_> = std_p.chain(ext_p).collect();
-        pocket_resources::package(all_paths.iter()).unwrap();
-    }
-
-    // Specify which files will cause a rebuild if changed.
-
-    for path in lib_rebuildables().iter() {
-        demand_rebuild(&path);
-    }
-
-    for &lang in std_langs.iter() {
-        demand_rebuild(Patterns::sourcepath(lang, &paths));
-        demand_rebuild(Exceptions::sourcepath(lang, &paths));
-    }
-    for &lang in ext_langs.iter() {
-        demand_rebuild(ext::Patterns::sourcepath(lang, &paths));
     }
 }
 

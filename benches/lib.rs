@@ -9,10 +9,10 @@ use std::io::{BufRead, BufReader};
 use std::path::{Path};
 use test::{black_box, Bencher};
 
-extern crate hyphenation;
-use hyphenation::*;
-use hyphenation::extended::*;
-use hyphenation::Language::*;
+extern crate kl_hyphenate;
+use kl_hyphenate::*;
+use kl_hyphenate::extended::*;
+use kl_hyphenate::Language::*;
 
 
 fn fiat_std(lang : Language) -> Standard {

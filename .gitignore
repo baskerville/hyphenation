@@ -1,6 +1,4 @@
-corpora
-dictionaries
-
-target
+/target
+**/*.rs.bk
 Cargo.lock
-.DS_Store
+/dictionaries
