@@ -4,10 +4,6 @@ Two strategies are available:
 - Standard Knuth–Liang hyphenation, with dictionaries built from the [TeX UTF-8 patterns](http://www.ctan.org/tex-archive/language/hyph-utf8).
 - Extended (“non-standard”) hyphenation based on László Németh's [Automatic non-standard hyphenation in OpenOffice.org](https://www.tug.org/TUGboat/tb27-1/tb86nemeth.pdf), with dictionaries built from Libre/OpenOffice patterns.
 
-## Documentation
-
-[Docs.rs](https://docs.rs/kl-hyphenate)
-
 ## Usage
 
 ### Quickstart
@@ -66,7 +62,7 @@ Hyphenation patterns for languages affected by normalization occasionally cover 
 
 ```toml
 [dependencies.kl-hyphenate]
-version = "0.7.1"
+version = "…"
 features = ["nfc"]
 ```
 
