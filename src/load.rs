@@ -27,34 +27,9 @@ Dictionaries can be loaded from the file system rather more succintly with
 the [`from_path`] shorthand:
 
 ```norun
-let path_to_dict = "/path/to/english-dictionary.bincode";
-let english_us = Standard::from_path(Language::EnglishUS, path_to_dict) ?;
+let path = "dictionaries/en-us.standard.bincode";
+let en_us = Standard::from_path(Language::EnglishUS, path) ?;
 ```
-
-Dictionaries bundled with the `hyphenation` library are copied to Cargo's
-output directory at build time. To locate them, look for a `dictionaries`
-folder under `target`:
-
-```ignore
-$ find target -name "dictionaries"
-target/debug/build/hyphenation-33034db3e3b5f3ce/out/dictionaries
-```
-
-
-## Embedding
-
-Optionally, hyphenation dictionaries can be embedded in the compiled
-artifact by enabling the `embed_all` feature. Embedded dictionaries can be
-accessed directly from memory.
-
-```ignore
-use kl_hyphenate::{Standard, Language, Load};
-
-let english_us = Standard::from_embedded(Language::EnglishUS) ?;
-```
-
-Note that embeding significantly increases the size of the compiled artifact.
-
 
 [`Load`]: trait.Load.html
 [`from_path`]: trait.Load.html#method.from_path
@@ -70,7 +45,6 @@ use std::result;
 
 use hyphenation_commons::Language;
 use hyphenation_commons::dictionary::{Standard, Extended};
-
 
 /// Convenience methods for the retrieval of hyphenation dictionaries.
 pub trait Load : Sized {
