@@ -185,8 +185,7 @@ fn write<T>(item : &T, path : &Path) -> Result<(), Error> where T : ser::Seriali
 
 
 fn main() {
-    #[cfg(any(feature = "build_dictionaries", feature = "nfc", feature = "nfd",
-              feature = "nfkc", feature = "nfkd"))]
+    #[cfg(feature = "build_dictionaries")]
     {
         use std::fs;
         use hyphenation_commons::Language::*;
