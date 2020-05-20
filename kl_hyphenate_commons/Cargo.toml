@@ -1,0 +1,13 @@
+[package]
+name = "kl-hyphenate-commons"
+version = "0.7.3"
+authors = ["Bastien Dejean <nihilhill@gmail.com>", "Andrew <andrew@banausia.com>"]
+license = "Apache-2.0/MIT"
+documentation = "https://docs.rs/kl-hyphenate"
+repository = "https://github.com/baskerville/kl-hyphenate"
+homepage = "https://github.com/baskerville/kl-hyphenate"
+description = "Proemial code for the `hyphenation` library"
+
+[dependencies]
+serde = { version = "1.0.110", features = ["derive"] }
+atlatl = { version = "0.1.2", features = ["serde"] }
