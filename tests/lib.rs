@@ -8,7 +8,7 @@ use std::path::{Path};
 use quickcheck::{quickcheck, TestResult};
 
 extern crate kl_hyphenate;
-extern crate hyphenation_commons;
+extern crate kl_hyphenate_commons;
 use kl_hyphenate::*;
 use kl_hyphenate::extended::*;
 use kl_hyphenate::Language::*;

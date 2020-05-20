@@ -43,8 +43,8 @@ use std::fs::File;
 use std::path::Path;
 use std::result;
 
-use hyphenation_commons::Language;
-use hyphenation_commons::dictionary::{Standard, Extended};
+use kl_hyphenate_commons::Language;
+use kl_hyphenate_commons::dictionary::{Standard, Extended};
 
 /// Convenience methods for the retrieval of hyphenation dictionaries.
 pub trait Load : Sized {

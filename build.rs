@@ -5,7 +5,7 @@ extern crate unicode_normalization;
 
 extern crate atlatl;
 extern crate bincode;
-extern crate hyphenation_commons;
+extern crate kl_hyphenate_commons;
 extern crate serde;
 
 use atlatl::fst;
@@ -22,10 +22,10 @@ use std::io::prelude::*;
 use std::iter::FromIterator;
 use std::path::{Path, PathBuf};
 
-use hyphenation_commons::dictionary::*;
-use hyphenation_commons::dictionary::extended as ext;
-use hyphenation_commons::Language;
-use hyphenation_commons::parse::*;
+use kl_hyphenate_commons::dictionary::*;
+use kl_hyphenate_commons::dictionary::extended as ext;
+use kl_hyphenate_commons::Language;
+use kl_hyphenate_commons::parse::*;
 
 
 // Configuration of exclusive optional features
@@ -188,7 +188,7 @@ fn main() {
     #[cfg(feature = "build_dictionaries")]
     {
         use std::fs;
-        use hyphenation_commons::Language::*;
+        use kl_hyphenate_commons::Language::*;
         let _std_out = "standard";
         let _ext_out = "extended";
         let dict_folder = Path::new("dictionaries");

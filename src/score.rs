@@ -36,8 +36,8 @@ valid breaks. Thus, having matched these patterns, the dictionary will
 offer "fir·kin" as a valid hyphenation.
 */
 
-use hyphenation_commons::dictionary::*;
-use hyphenation_commons::dictionary::extended::*;
+use kl_hyphenate_commons::dictionary::*;
+use kl_hyphenate_commons::dictionary::extended::*;
 
 
 /// Methods to evaluate each index in a string as an opportunity for hyphenation.

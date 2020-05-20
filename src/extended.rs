@@ -11,4 +11,4 @@ dictionaries carry an optional [`Subregion`] to describe such changes.
 [`Subregion`]: struct.Subregion.html
 */
 
-pub use hyphenation_commons::dictionary::extended::{Extended, Subregion};
+pub use kl_hyphenate_commons::dictionary::extended::{Extended, Subregion};

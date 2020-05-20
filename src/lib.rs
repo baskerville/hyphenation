@@ -88,7 +88,7 @@ hyphen on new lines).
 
 extern crate atlatl;
 extern crate bincode;
-extern crate hyphenation_commons;
+extern crate kl_hyphenate_commons;
 
 
 mod case_folding;
@@ -98,8 +98,8 @@ pub mod iter;
 pub mod load;
 pub mod score;
 
-pub use hyphenation_commons::Language;
-pub use hyphenation_commons::dictionary::Standard;
+pub use kl_hyphenate_commons::Language;
+pub use kl_hyphenate_commons::dictionary::Standard;
 pub use hyphenator::Hyphenator;
 pub use iter::Iter;
 pub use load::Load;
