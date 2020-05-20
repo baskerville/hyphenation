@@ -1,3 +1,7 @@
+## 0.7.3
+
+- Update the hyphenation patterns.
+
 ## 0.7.2
 
 - Honor the boundaries for the known hyphenations.
