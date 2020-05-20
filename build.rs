@@ -217,7 +217,7 @@ fn main() {
             let dict = Standard {
                 language,
                 patterns : Patterns::build(language, &paths).unwrap(),
-                exceptions : Exceptions::build(language, &paths).unwrap(),
+                exceptions : Exceptions::build(language, &paths).unwrap_or_default(),
                 minima : language.minima()
             };
 
