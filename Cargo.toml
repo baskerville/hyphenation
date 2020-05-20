@@ -27,13 +27,13 @@ nfkc = ["unicode-normalization"]
 nfkd = ["unicode-normalization"]
 
 [dependencies]
-hyphenation_commons = "0.7.1"
+hyphenation_commons = { path = "hyphenation_commons" }
 atlatl = { version = "0.1.2", features = ["serde"] }
 bincode = "1.0"
 serde = "1.0"
 
 [build-dependencies]
-hyphenation_commons = "0.7.1"
+hyphenation_commons = { path = "hyphenation_commons" }
 atlatl = { version = "0.1.2", features = ["serde"] }
 bincode = "1.0"
 serde = "1.0"
